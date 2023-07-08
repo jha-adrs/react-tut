@@ -5,17 +5,17 @@ import About from './components/About';
 import React, { useState } from 'react';
 import Alert from './components/Alert';
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route
+    Routes,
+  Route,
 } from "react-router-dom";
 
 
 function App() {
   const [mode, setMode] = useState('light'); // Whether dark mode is enabled or not
   const [alert, setAlert] = useState(null);
+  const [buttonState, setButtonState] = useState("");
 
-  const showAlert = (message, type)=>{
+  const showAlert = (message, type) => {
     setAlert({
       msg: message,
       type: type
@@ -25,37 +25,30 @@ function App() {
     }, 1500);
   }
 
-  const toggleMode = ()=>{
-    if(mode === 'light'){
+  const toggleMode = () => {
+    if (mode === 'light') {
       setMode('dark');
-      document.body.style.backgroundColor = '#042743';
+      setButtonState("checked");
+      document.body.style.backgroundColor = '#2C3333';
       showAlert("Dark mode has been enabled", "success");
     }
-    else{
+    else {
       setMode('light');
+      setButtonState("");
       document.body.style.backgroundColor = 'white';
       showAlert("Light mode has been enabled", "success");
     }
   }
   return (
-      <>
-        <Router>
-          <Navbar title="TextUtils" mode={mode} toggleMode={toggleMode} key={new Date()} />
-          <Alert alert={alert}/>
-          <div className="container my-3">
-            <Switch>
-              {/* /users --> Component 1
-        /users/home --> Component 2 */}
-              <Route exact path="/about">
-                <About mode={mode} />
-              </Route>
-              <Route exact path="/">
-                <TextForm showAlert={showAlert} heading="Try TextUtils - word counter, character counter, remove extra spaces" mode={mode}/>
-              </Route>
-            </Switch>
-          </div>
-        </Router>
-      </>
+    <div>
+      <Navbar title="TextUtils" mode={mode} toggleMode={toggleMode} key={new Date()} buttonState = {buttonState}/>
+      <Alert alert={alert} />
+      <div className="container my-3"></div>
+    <Routes>
+        <Route exact path="/about" element = {<About mode={mode} />}/>
+        <Route exact path="/" element= {<TextForm showAlert={showAlert} heading="Try TextUtils - word counter, character counter, remove extra spaces" mode={mode} />}/>
+    </Routes>
+    </div>
   );
 }
 
